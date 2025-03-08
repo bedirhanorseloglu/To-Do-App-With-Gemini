@@ -1,0 +1,21 @@
+bcrypt==4.0.1   # kullanıcı şifrelerini hash'lemek için
+cryptography==43.0.0    # kullanıcı şifrelerini hash'lemek için
+fastapi==0.112.2    # web uygulamasının çalışması için
+psycopg2-binary==2.9.9
+python-jose==3.3.0
+python-multipart==0.0.9
+SQLAlchemy==2.0.32  # veritabanı ile bağlantı kurmak için
+uvicorn==0.30.6
+passlib==1.7.4
+pytest==8.3.2
+httpx==0.27.2
+pytest-asyncio==0.24.0
+aiofiles==24.1.0
+jinja2==3.1.4   # html dosyalarının içerisinde kullanılacak
+langchain==0.2.15   # gemini ile iletişim kurmak için
+python-dotenv==1.0.1
+google-generativeai==0.7.2
+langchain-google-genai==1.0.10
+markdown==3.7   # üretken yapay zekadan bize gelen çıktılarda font ayarları
+bs4==0.0.2
+alembic==1.13.2

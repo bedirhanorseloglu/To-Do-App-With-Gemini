@@ -1,0 +1,85 @@
+{% include 'layout.html' %}
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      Make a new todo
+    </div>
+    <div class="card-body">
+      <form id="todoForm">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" class="form-control" name="title" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" rows="3" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select class="form-control" name="priority">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" name="completed">
+          <label class="form-check-label">Complete</label>
+        </div>
+        <button type="submit" class="btn btn-primary"> Add new todo </button>
+        <a href="/todo/todo-page" class="btn btn-success">Back</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('todoForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const todoData = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        priority: parseInt(formData.get('priority')),
+        completed: formData.get('completed') === 'on'
+    };
+
+    try {
+        // Cookie'den access token'ı al
+        const token = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('access_token='))
+            ?.split('=')[1];
+
+        if (!token) {
+            window.location.href = '/auth/login-page';
+            return;
+        }
+
+        const response = await fetch('/todo/todo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(todoData)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert(result.message);
+            window.location.href = '/todo/todo-page';
+        } else {
+            const errorData = await response.json();
+            alert('Hata: ' + errorData.detail);
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('Bir hata oluştu!');
+    }
+});
+</script>

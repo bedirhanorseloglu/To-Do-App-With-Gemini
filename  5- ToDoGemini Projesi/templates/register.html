@@ -1,0 +1,108 @@
+{% include 'layout.html' %}
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      If you do not have an account already, register from here!
+    </div>
+    <div class="card-body">
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="user_email">Email</label>
+            <input type="email" class="form-control" id="user_email" name="user_email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="user_username">Username</label>
+            <input type="text" class="form-control" id="user_username" name="user_username" placeholder="Choose a username" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="user_firstName">First Name</label>
+            <input type="text" class="form-control" id="user_firstName" name="user_firstName" placeholder="Enter your first name" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="user_lastName">Last Name</label>
+            <input type="text" class="form-control" id="user_lastName" name="user_lastName" placeholder="Enter your last name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="user_role">Role</label>
+            <input type="text" class="form-control" id="user_role" name="user_role" value="user" readonly required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your phone number" autocomplete="phone_number" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="user_hashPassword">Password</label>
+          <input type="password" class="form-control" id="user_hashPassword" name="user_hashPassword" placeholder="Choose a password" autocomplete="new-password" required>
+        </div>
+        <div class="form-group">
+          <label for="password2">Verify Password</label>
+          <input type="password" class="form-control" id="password2" name="password2" placeholder="Verify your password" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+    <div class="card-footer text-muted">
+      <a href="/auth/login-page">Already have an account?</a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Şifre kontrolü
+    if (formData.get('user_hashPassword') !== formData.get('password2')) {
+        alert('Şifreler eşleşmiyor!');
+        return;
+    }
+    
+    const userData = {
+        user_email: formData.get('user_email'),
+        user_username: formData.get('user_username'),
+        user_firstName: formData.get('user_firstName'),
+        user_lastName: formData.get('user_lastName'),
+        user_role: formData.get('user_role'),
+        phone_number: formData.get('phone_number'),
+        user_hashPassword: formData.get('user_hashPassword'),
+        user_isActive: true
+    };
+
+    try {
+        const response = await fetch('/auth/create_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+            window.location.href = '/auth/login-page';
+        } else {
+            const errorData = await response.json();
+            alert('Hata: ' + errorData.detail);
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('Bir hata oluştu!');
+    }
+});
+</script>
+
+
+
+
+
+
+
